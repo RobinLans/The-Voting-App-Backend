@@ -14,30 +14,76 @@ const db = new Pool({
 app.use(cors());
 app.use(express.json());
 
-app.get("/get-polls", (req, res) => {
-  db.query("SELECT * FROM polls;", (err, result) => {
+// Get all polls
+app.get("/polls", (req, res) => {
+  db.query("SELECT id, question, poll_count  FROM polls;", (err, result) => {
     if (err) {
       console.log(err);
     }
-    const data = JSON.stringify(result.rows);
-    console.log(data[0]);
-    res.json(JSON.parse(data));
+    const data = result.rows;
+    res.json(data);
   });
 });
 
-app.get("/get-poll/:id", (req, res) => {
+// Get a specific poll with id
+app.get("/poll/:id", (req, res) => {
+  const pollId = req.params.id;
+
+  db.query("SELECT * FROM polls WHERE id = $1;", [pollId], (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+    const data = result.rows;
+
+    res.json(data);
+  });
+});
+
+app.get("/poll/:id/results", (req, res) => {
   const pollId = req.params.id;
 
   db.query(
-    "SELECT * FROM public.polls WHERE id = $1;",
-    [pollId],
+    `SELECT poll_count, options_weight  FROM polls WHERE id = ${pollId};`,
     (err, result) => {
       if (err) {
         console.log(err);
       }
-      const data = JSON.stringify(result.rows);
+      const data = result.rows;
+      res.json(data);
+    }
+  );
+});
 
-      res.json(JSON.parse(data));
+// when an answer is submitted
+app.post("/poll/:id/submit", (req, res) => {
+  const pollId = req.params.id;
+  const submissionInfo = req.body;
+  const choiceIndex = submissionInfo.choice;
+  let resultOfSubmission = {
+    success: false,
+  };
+
+  submissionInfo.pollCount += 1;
+
+  const newOptionsWeight = JSON.stringify(
+    submissionInfo.optionsWeight.map((option, index) => {
+      if (index === choiceIndex) return option + 1;
+      else return option;
+    })
+  );
+
+  db.query(
+    `UPDATE polls SET poll_count=${submissionInfo.pollCount}, options_weight=${newOptionsWeight}  WHERE id = ${pollId};`,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+
+      if (result?.rowCount) {
+        resultOfSubmission.success = true;
+      }
+
+      res.json(resultOfSubmission);
     }
   );
 });
@@ -45,27 +91,3 @@ app.get("/get-poll/:id", (req, res) => {
 app.listen(process.env.PORT || 4000, () => {
   console.log("Server has started");
 });
-
-// let poll = {
-//   id: 1,
-//   question: "What is the best framework?",
-//   options: ["React", "Svelte", "Vue", "Angular"],
-//   pollCount: 20,
-//   optionsWeight: [10, 2, 4, 4],
-// };
-
-// let user = {
-//   id: 1,
-//   username: "blabla",
-//   password: "pwd123",
-//   answers: [
-//     {
-//       pollId: 1,
-//       pollAnswer: 2,
-//     },
-//     {
-//       pollId: 2,
-//       pollAnswer: 4,
-//     },
-//   ],
-// };
