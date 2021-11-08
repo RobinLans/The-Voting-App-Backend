@@ -88,7 +88,38 @@ app.post("/poll/:id/submit", (req, res) => {
   );
 });
 
-app.post("/poll/create", (req, res) => {});
+app.post("/poll/create", (req, res) => {
+  const question = req.body.question;
+  const options = JSON.stringify(req.body.options);
+
+  const optionsWeight = JSON.stringify(
+    req.body.options.map((option) => {
+      console.log(option);
+      return 0;
+    })
+  );
+
+  console.log(optionsWeight);
+
+  let pollCreated = {
+    success: false,
+  };
+
+  db.query(
+    `INSERT INTO polls(question, options, poll_count, options_weight)
+    VALUES ('${question}', '${options}', 0, '${optionsWeight}');`,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      if (result?.rowCount) {
+        pollCreated.success = true;
+      }
+
+      res.json(pollCreated);
+    }
+  );
+});
 
 app.listen(process.env.PORT || 4000, () => {
   console.log("Server has started");
