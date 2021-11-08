@@ -119,6 +119,67 @@ app.post("/poll/create", (req, res) => {
   );
 });
 
+// LOGIN
+app.post("/login", (req, res) => {
+  const loginCredentials = req.body;
+
+  let loginResult = {
+    success: false,
+  };
+
+  db.query(
+    `SELECT * FROM users WHERE username = '${loginCredentials.username}' AND password = '${loginCredentials.password}' ;`,
+    (err, result) => {
+      if (err) {
+        console.log("err", err);
+      }
+
+      const data = result.rows;
+
+      if (data.length > 0) {
+        loginResult.success = true;
+      }
+
+      res.json(loginResult);
+    }
+  );
+});
+
+//REGISTER
+app.post("/signup", (req, res) => {
+  const signupCredentials = req.body;
+
+  console.log(signupCredentials);
+
+  let signupResult = {
+    success: false,
+  };
+
+  db.query(
+    `INSERT INTO users(username, password)
+SELECT '${signupCredentials.username}', '${signupCredentials.password}'
+WHERE
+NOT EXISTS (
+      SELECT username FROM users WHERE username = '${signupCredentials.username}'
+  );`,
+    (err, result) => {
+      if (err) {
+        console.log("err", err);
+      }
+
+      const data = result.rowCount;
+
+      if (data > 0) {
+        signupResult.success = true;
+      } else {
+        signupResult.message = "user already exists";
+      }
+
+      res.json(signupResult);
+    }
+  );
+});
+
 app.listen(process.env.PORT || 4000, () => {
   console.log("Server has started");
 });
