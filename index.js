@@ -88,6 +88,8 @@ app.post("/poll/:id/submit", (req, res) => {
   );
 });
 
+app.post("/poll/create", (req, res) => {});
+
 app.listen(process.env.PORT || 4000, () => {
   console.log("Server has started");
 });
