@@ -99,8 +99,6 @@ app.post("/poll/create", (req, res) => {
     })
   );
 
-  console.log(optionsWeight);
-
   let pollCreated = {
     success: false,
   };
