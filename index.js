@@ -29,10 +29,11 @@ app.use(
 
 // Check user auth
 app.get("/auth", (req, res) => {
+  console.log("USER SESSION SESSION: ", req.session);
   console.log("**************************************");
-  console.log("USER SESSION ID: ", req.session.auth);
-  console.log("**************************************");
+  console.log("USER SESSION AUTH: ", req.session.auth);
   console.log("USER SESSION USERNAME: ", req.session.username);
+  console.log("**************************************");
 
   if (req.session.auth) {
     res.status(200).json({ authenticated: true });
@@ -226,7 +227,7 @@ app.post("/login", (req, res) => {
         req.session.username = data[0].username;
 
         console.log("**************************************");
-        console.log("USER SESSION ID: ", req.session.auth);
+        console.log("USER SESSION AUTH: ", req.session.auth);
         console.log("**************************************");
       }
 
