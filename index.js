@@ -32,6 +32,7 @@ app.get("/auth", (req, res) => {
   console.log("**************************************");
   console.log("USER SESSION ID: ", req.session.auth);
   console.log("**************************************");
+  console.log("USER SESSION USERNAME: ", req.session.username);
 
   if (req.session.auth) {
     res.status(200).json({ authenticated: true });
@@ -222,6 +223,8 @@ app.post("/login", (req, res) => {
         loginResult.userId = data[0].id;
         loginResult.username = data[0].username;
         req.session.auth = true;
+        req.session.username = data[0].username;
+
         console.log("**************************************");
         console.log("USER SESSION ID: ", req.session.auth);
         console.log("**************************************");
