@@ -16,7 +16,7 @@ app.use(express.json());
 
 // Get all polls
 app.get("/polls", (req, res) => {
-  db.query("SELECT id, question, poll_count  FROM polls;", (err, result) => {
+  db.query("SELECT id, question, total_count  FROM polls;", (err, result) => {
     if (err) {
       console.log(err);
     }
@@ -43,13 +43,43 @@ app.get("/poll/:id/results", (req, res) => {
   const pollId = req.params.id;
 
   db.query(
-    `SELECT poll_count, options_weight  FROM polls WHERE id = ${pollId};`,
+    `SELECT total_count, options_weight  FROM polls WHERE id = ${pollId};`,
     (err, result) => {
       if (err) {
         console.log(err);
       }
       const data = result.rows;
       res.json(data);
+    }
+  );
+});
+
+//Check to see if the user voted
+app.get("/poll/:id/voted", (req, res) => {
+  const userId = req.body.userId;
+  const pollId = req.params.id;
+
+  let userAlreadyVoted = {
+    success: false,
+  };
+
+  db.query(
+    `SELECT * FROM users_polls
+    WHERE "userId" = ${userId} AND "pollId" = ${pollId}`,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      const data = result.rows;
+
+      if (data.length > 0) {
+        userAlreadyVoted.success = true;
+        userAlreadyVoted.message = "user already voted on this poll";
+      } else {
+        userAlreadyVoted.message = "user has not voted on this poll";
+      }
+
+      res.json(userAlreadyVoted);
     }
   );
 });
@@ -73,7 +103,7 @@ app.post("/poll/:id/submit", (req, res) => {
   );
 
   db.query(
-    `UPDATE polls SET poll_count=${submissionInfo.pollCount}, options_weight=${newOptionsWeight}  WHERE id = ${pollId};`,
+    `UPDATE polls SET total_count=${submissionInfo.pollCount}, options_weight=${newOptionsWeight}  WHERE id = ${pollId};`,
     (err, result) => {
       if (err) {
         console.log(err);
@@ -88,6 +118,31 @@ app.post("/poll/:id/submit", (req, res) => {
   );
 });
 
+//When an answer is submitted we also need to submit which user made that answer
+app.post("/poll/:id/submit-user", (req, res) => {
+  const pollId = req.params.id;
+  const userId = req.body.userId;
+
+  const votesStored = {
+    success: false,
+  };
+
+  db.query(
+    `INSERT INTO users_polls("userId", "pollId") VALUES (${userId}, ${pollId} );`,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+      if (result?.rowCount) {
+        votesStored.success = true;
+      }
+
+      res.json(votesStored);
+    }
+  );
+});
+
+// Create a new poll
 app.post("/poll/create", (req, res) => {
   const question = req.body.question;
   const options = JSON.stringify(req.body.options);
@@ -104,7 +159,7 @@ app.post("/poll/create", (req, res) => {
   };
 
   db.query(
-    `INSERT INTO polls(question, options, poll_count, options_weight)
+    `INSERT INTO polls(question, options, total_count, options_weight)
     VALUES ('${question}', '${options}', 0, '${optionsWeight}');`,
     (err, result) => {
       if (err) {
