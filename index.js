@@ -193,6 +193,7 @@ app.post("/login", (req, res) => {
 
       if (data.length > 0) {
         loginResult.success = true;
+        loginResult.userId = data[0].id;
       }
 
       res.json(loginResult);
