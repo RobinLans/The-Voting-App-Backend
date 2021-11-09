@@ -32,21 +32,6 @@ app.use(
 /*              ROUTES                  */
 /****************************************/
 
-// Check user auth
-app.get("/auth", (req, res) => {
-  console.log("USER SESSION: ", req.session);
-  console.log("**************************************");
-  console.log("USER SESSION AUTH: ", req.session.auth);
-  console.log("USER SESSION USERNAME: ", req.session.username);
-  console.log("**************************************");
-
-  if (req.session.auth) {
-    res.status(200).json({ authenticated: true });
-  } else {
-    res.status(200).json({ authenticated: false });
-  }
-});
-
 // Get all polls
 app.get("/polls", (req, res) => {
   db.query("SELECT id, question, total_count  FROM polls;", (err, result) => {
@@ -230,7 +215,6 @@ app.post("/login", (req, res) => {
         loginResult.username = data[0].username;
         req.session.auth = true;
         req.session.username = data[0].username;
-        req.session.save();
         console.log("**************************************");
         console.log("USER SESSION AUTH: ", req.session.auth);
         console.log("**************************************");
@@ -274,6 +258,21 @@ NOT EXISTS (
       res.json(signupResult);
     }
   );
+});
+
+// Check user auth
+app.get("/auth", (req, res) => {
+  console.log("USER SESSION: ", req.session);
+  console.log("**************************************");
+  console.log("USER SESSION AUTH: ", req.session.auth);
+  console.log("USER SESSION USERNAME: ", req.session.username);
+  console.log("**************************************");
+
+  if (req.session.auth) {
+    res.status(200).json({ authenticated: true });
+  } else {
+    res.status(200).json({ authenticated: false });
+  }
 });
 
 var server = app.listen(process.env.PORT || 3001, function () {
