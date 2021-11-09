@@ -34,7 +34,7 @@ app.use(
 
 // Check user auth
 app.get("/auth", (req, res) => {
-  console.log("USER SESSION SESSION: ", req.session);
+  console.log("USER SESSION: ", req.session);
   console.log("**************************************");
   console.log("USER SESSION AUTH: ", req.session.auth);
   console.log("USER SESSION USERNAME: ", req.session.username);
@@ -230,7 +230,7 @@ app.post("/login", (req, res) => {
         loginResult.username = data[0].username;
         req.session.auth = true;
         req.session.username = data[0].username;
-
+        req.session.save();
         console.log("**************************************");
         console.log("USER SESSION AUTH: ", req.session.auth);
         console.log("**************************************");
