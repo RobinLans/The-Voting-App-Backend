@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const session = require("express-session");
 require("dotenv").config();
 
 const { Pool } = require("pg");
@@ -13,6 +14,27 @@ const db = new Pool({
 
 app.use(cors());
 app.use(express.json());
+app.use(session({ secret: 'somesecretsessionkey', cookie: { maxAge: 60000 } }))
+
+
+
+/****************************************/
+/*              ROUTES                  */
+/****************************************/
+
+
+// Check user auth
+app.get("/auth", (req, res) => {
+  console.log('**************************************')
+  console.log('USER SESSION ID: ',  req.session.auth);
+  console.log('**************************************')
+
+  if (req.session.auth) {
+    res.status(200).json({ authenticated: true });
+  } else {
+    res.status(200).json({ authenticated: false });
+  }
+});
 
 // Get all polls
 app.get("/polls", (req, res) => {
@@ -193,6 +215,10 @@ app.post("/login", (req, res) => {
 
       if (data.length > 0) {
         loginResult.success = true;
+        req.session.auth = true;
+        console.log('**************************************')
+        console.log('USER SESSION ID: ',  req.session.auth);
+        console.log('**************************************')
       }
 
       res.json(loginResult);
@@ -235,6 +261,6 @@ NOT EXISTS (
   );
 });
 
-app.listen(process.env.PORT || 4000, () => {
-  console.log("Server has started");
+var server = app.listen(process.env.PORT || 3001, function () {
+  console.log('Listening on port ' + server.address().port);
 });
