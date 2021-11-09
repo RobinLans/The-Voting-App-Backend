@@ -216,6 +216,7 @@ app.post("/login", (req, res) => {
         req.session.auth = true;
         req.session.username = data[0].username;
         console.log("**************************************");
+        console.log("USER SESSION: ", req.session);
         console.log("USER SESSION AUTH: ", req.session.auth);
         console.log("**************************************");
       }
