@@ -212,8 +212,7 @@ app.post("/login", (req, res) => {
         loginResult.success = true;
         loginResult.userId = data[0].id;
         loginResult.username = data[0].username;
-        req.session.auth = true;
-        req.session.username = data[0].username;
+        req.session.user = data[0].username;
 
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
@@ -266,10 +265,10 @@ NOT EXISTS (
 app.get("/auth", (req, res) => {
   console.log("USER SESSION: ", req.session);
 
-  if (req.session.auth) {
-    res.status(200).json({ authenticated: true });
+  if (req.session.user) {
+    res.status(200).json({ user: req.session.user });
   } else {
-    res.status(200).json({ authenticated: false });
+    res.status(200).json({ user: null });
   }
 });
 
