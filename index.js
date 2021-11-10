@@ -218,7 +218,7 @@ app.post("/login", (req, res) => {
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
         console.log("**************************************");
-        req.session.save();
+
         res.json(loginResult);
       } else {
         res.json({ success: false });
