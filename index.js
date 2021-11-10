@@ -281,6 +281,12 @@ app.get("/auth", (req, res) => {
   }
 });
 
+app.get("/auth2", (req, res) => {
+
+  console.log("SESSION: ", req.session);
+  res.status(200).json({ msg: 'ok' })
+});
+
 var server = app.listen(process.env.PORT || 3001, function () {
   console.log("Listening on port " + server.address().port);
 });
