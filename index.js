@@ -213,7 +213,7 @@ app.post("/login", (req, res) => {
         loginResult.userId = data[0].id;
         loginResult.username = data[0].username;
         req.session.user = data[0].username;
-        res.session.save();
+        req.session.save();
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
         console.log("**************************************");
