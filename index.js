@@ -264,6 +264,12 @@ NOT EXISTS (
   );
 });
 
+app.post("/signout", (req, res) => {
+  req.session.destroy();
+  console.log("USER SESSION: ", req.session);
+  res.status(200).json({ message: 'success' });
+});
+
 // Check user auth
 app.get("/auth", (req, res) => {
   console.log("USER SESSION: ", req.session);
