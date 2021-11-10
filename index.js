@@ -14,7 +14,10 @@ const db = new Pool({
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://rickywid.github.io/voting-app-frontend",
+    ],
     credentials: true,
   })
 );
@@ -26,7 +29,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       // sameSite: 'none'
-    }
+    },
   })
 );
 
@@ -267,7 +270,7 @@ NOT EXISTS (
 app.post("/signout", (req, res) => {
   req.session.destroy();
   console.log("USER SESSION: ", req.session);
-  res.status(200).json({ message: 'success' });
+  res.status(200).json({ message: "success" });
 });
 
 // Check user auth
