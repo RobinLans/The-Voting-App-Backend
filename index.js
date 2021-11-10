@@ -220,7 +220,7 @@ app.post("/login", (req, res) => {
         console.log("USER SESSION AUTH: ", req.session.auth);
         console.log("USER SESSION COUNT: ", req.session.count);
         console.log("**************************************");
-        req.sessions.save();
+        req.session.save();
         res.json(loginResult);
       } else {
         res.json({ success: false });
