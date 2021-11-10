@@ -23,8 +23,7 @@ app.use(
   session({
     secret: "somesecretsessionkey",
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
+    saveUninitialized: true
   })
 );
 
@@ -215,7 +214,6 @@ app.post("/login", (req, res) => {
         loginResult.username = data[0].username;
         req.session.auth = true;
         req.session.username = data[0].username;
-        req.session.save();
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
         console.log("USER SESSION AUTH: ", req.session.auth);
