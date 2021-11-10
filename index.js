@@ -23,7 +23,7 @@ app.use(
   session({
     secret: "somesecretsessionkey",
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
   })
 );
 
@@ -214,19 +214,14 @@ app.post("/login", (req, res) => {
         loginResult.username = data[0].username;
         req.session.auth = true;
         req.session.username = data[0].username;
+        req.session.count += 1;
+
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
         console.log("USER SESSION AUTH: ", req.session.auth);
+        console.log("USER SESSION COUNT: ", req.session.count);
         console.log("**************************************");
       }
-
-      if(req.session.count){
-        res.session.count++;
-      } else {
-        req.session.count = 1;
-      }
-
-      loginResult.count = req.session.count;
 
       res.json(loginResult);
     }
