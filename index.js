@@ -220,6 +220,14 @@ app.post("/login", (req, res) => {
         console.log("**************************************");
       }
 
+      if(req.session.count){
+        res.session.count++;
+      } else {
+        req.session.count = 1;
+      }
+
+      loginResult.count = req.session.count;
+
       res.json(loginResult);
     }
   );
