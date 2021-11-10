@@ -217,8 +217,6 @@ app.post("/login", (req, res) => {
 
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
-        console.log("USER SESSION AUTH: ", req.session.auth);
-        console.log("USER SESSION COUNT: ", req.session.count);
         console.log("**************************************");
         req.session.save();
         res.json(loginResult);
@@ -266,25 +264,13 @@ NOT EXISTS (
 
 // Check user auth
 app.get("/auth", (req, res) => {
-  req.session.count += 1;
   console.log("USER SESSION: ", req.session);
-  console.log("**************************************");
-  console.log("USER SESSION AUTH: ", req.session.auth);
-  console.log("USER SESSION USERNAME: ", req.session.username);
-  console.log("USER SESSION COUNT: ", req.session.count);
-  console.log("**************************************");
 
   if (req.session.auth) {
     res.status(200).json({ authenticated: true });
   } else {
     res.status(200).json({ authenticated: false });
   }
-});
-
-app.get("/auth2", (req, res) => {
-
-  console.log("SESSION: ", req.session);
-  res.status(200).json({ msg: 'ok' })
 });
 
 var server = app.listen(process.env.PORT || 3001, function () {
