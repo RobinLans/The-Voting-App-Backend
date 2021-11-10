@@ -214,12 +214,10 @@ app.post("/login", (req, res) => {
         loginResult.username = data[0].username;
         req.session.auth = true;
         req.session.username = data[0].username;
-        req.session.count += 1;
 
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
         console.log("USER SESSION AUTH: ", req.session.auth);
-        console.log("USER SESSION COUNT: ", req.session.count);
         console.log("**************************************");
       }
 
@@ -265,10 +263,12 @@ NOT EXISTS (
 
 // Check user auth
 app.get("/auth", (req, res) => {
+  req.session.count += 1;
   console.log("USER SESSION: ", req.session);
   console.log("**************************************");
   console.log("USER SESSION AUTH: ", req.session.auth);
   console.log("USER SESSION USERNAME: ", req.session.username);
+  console.log("USER SESSION COUNT: ", req.session.count);
   console.log("**************************************");
 
   if (req.session.auth) {
