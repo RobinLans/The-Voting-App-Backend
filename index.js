@@ -218,6 +218,7 @@ app.post("/login", (req, res) => {
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
         console.log("USER SESSION AUTH: ", req.session.auth);
+        console.log("USER SESSION COUNT: ", req.session.count);
         console.log("**************************************");
       }
 
