@@ -118,12 +118,12 @@ app.post("/poll/:id/submit", (req, res) => {
 
   submissionInfo.pollCount += 1;
 
-  const newOptionsWeight = JSON.stringify(
-    submissionInfo.optionsWeight.map((option, index) => {
-      if (index === choiceIndex) return option + 1;
-      else return option;
-    })
-  );
+  const results = JSON.parse(optionsWeight).map((option, index) => {
+    if (index === choiceIndex) return option + 1;
+    else return option;
+  });
+
+  const newOptionsWeight = results;
 
   db.query(
     `UPDATE polls SET total_count=${submissionInfo.pollCount}, options_weight=${newOptionsWeight}  WHERE id = ${pollId};`,
@@ -279,9 +279,9 @@ app.get("/auth", (req, res) => {
   console.log("USER SESSION: ", req.session);
 
   if (req.session.user) {
-    res.status(200).json({ 
-      user: req.session.user, 
-      userId: req.session.userId 
+    res.status(200).json({
+      user: req.session.user,
+      userId: req.session.userId
     });
   } else {
     res.status(200).json({ user: null });
