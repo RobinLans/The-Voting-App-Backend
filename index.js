@@ -109,41 +109,40 @@ app.get("/poll/:id/voted", (req, res) => {
 
 // when an answer is submitted
 app.post("/poll/:id/submit", (req, res) => {
-  console.log(req.body);
-  // const pollId = req.params.id;
-  // const submissionInfo = req.body;
-  // const choiceIndex = submissionInfo.choice;
-  // let resultOfSubmission = {
-  //   success: false,
-  // };
+  const pollId = req.params.id;
+  const submissionInfo = req.body;
+  const choiceIndex = submissionInfo.choice;
+  let resultOfSubmission = {
+    success: false,
+  };
 
-  // submissionInfo.pollCount += 1;
+  submissionInfo.pollCount += 1;
 
-  // console.log('DATA: ', submissionInfo)
-  // const results = JSON.parse(submissionInfo.optionsWeight).map((option, index) => {
-  //   if (index === choiceIndex) return option + 1;
-  //   else return option;
-  // });
+  console.log('DATA: ', submissionInfo)
+  const results = JSON.parse(submissionInfo.optionsWeight).map((option, index) => {
+    if (index === choiceIndex) return option + 1;
+    else return option;
+  });
 
-  // const newOptionsWeight = results;
-  // console.log('************************************')
-  // console.log('newOptionsWeight:', newOptionsWeight)
-  // console.log('************************************')
+  const newOptionsWeight = results;
+  console.log('************************************')
+  console.log('newOptionsWeight:', newOptionsWeight)
+  console.log('************************************')
   
-  // db.query(
-  //   `UPDATE polls SET total_count=${submissionInfo.pollCount}, options_weight=${newOptionsWeight}  WHERE id = ${pollId};`,
-  //   (err, result) => {
-  //     if (err) {
-  //       console.log(err);
-  //     }
+  db.query(
+    `UPDATE polls SET total_count=${submissionInfo.pollCount}, options_weight=${newOptionsWeight}  WHERE id = ${pollId};`,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      }
 
-  //     if (result?.rowCount) {
-  //       resultOfSubmission.success = true;
-  //     }
+      if (result?.rowCount) {
+        resultOfSubmission.success = true;
+      }
 
-  //     res.json(resultOfSubmission);
-  //   }
-  // );
+      res.json(resultOfSubmission);
+    }
+  );
 });
 
 //When an answer is submitted we also need to submit which user made that answer
