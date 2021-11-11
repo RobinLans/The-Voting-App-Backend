@@ -14,10 +14,7 @@ const db = new Pool({
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://rickywid.github.io",
-    ],
+    origin: ["http://localhost:3000", "https://rickywid.github.io"],
     credentials: true,
   })
 );
@@ -81,7 +78,7 @@ app.get("/poll/:id/results", (req, res) => {
 app.post("/poll/:id/voted", (req, res) => {
   const userId = req.session.userId || req.body.userId;
   const pollId = req.params.id;
-console.log(userId, typeof(userId), req.body)
+  console.log(userId, typeof userId, req.body);
   let userAlreadyVoted = {
     success: false,
   };
@@ -116,9 +113,6 @@ app.post("/poll/:id/submit", (req, res) => {
     success: false,
   };
 
-  console.log(req.body);
-  console.log(pollId);
-
   submissionInfo.pollCount += 1;
 
   const newOptionsWeight = JSON.stringify(
@@ -134,8 +128,6 @@ app.post("/poll/:id/submit", (req, res) => {
       if (err) {
         console.log(err);
       }
-
-      console.log(result);
 
       if (result?.rowCount) {
         resultOfSubmission.success = true;
@@ -177,7 +169,6 @@ app.post("/poll/create", (req, res) => {
 
   const optionsWeight = JSON.stringify(
     req.body.options.map((option) => {
-      console.log(option);
       return 0;
     })
   );
@@ -226,9 +217,6 @@ app.post("/login", (req, res) => {
         req.session.user = data[0].username;
         req.session.userId = data[0].id;
         req.session.save();
-        console.log("**************************************");
-        console.log("USER SESSION: ", req.session);
-        console.log("**************************************");
 
         res.json(loginResult);
       } else {
@@ -241,8 +229,6 @@ app.post("/login", (req, res) => {
 //REGISTER
 app.post("/signup", (req, res) => {
   const signupCredentials = req.body;
-
-  console.log(signupCredentials);
 
   let signupResult = {
     success: false,
@@ -275,14 +261,11 @@ NOT EXISTS (
 
 app.post("/signout", (req, res) => {
   req.session.destroy();
-  console.log("USER SESSION: ", req.session);
   res.status(200).json({ message: "success" });
 });
 
 // Check user auth
 app.get("/auth", (req, res) => {
-  console.log("USER SESSION: ", req.session);
-
   if (req.session.user) {
     res.status(200).json({
       user: req.session.user,
