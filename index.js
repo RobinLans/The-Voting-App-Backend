@@ -16,7 +16,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://rickywid.github.io/voting-app-frontend",
+      "https://rickywid.github.io",
     ],
     credentials: true,
   })
