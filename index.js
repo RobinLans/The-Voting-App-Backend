@@ -219,6 +219,7 @@ app.post("/login", (req, res) => {
         loginResult.userId = data[0].id;
         loginResult.username = data[0].username;
         req.session.user = data[0].username;
+        req.session.userId = data[0].id;
         req.session.save();
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
@@ -278,7 +279,10 @@ app.get("/auth", (req, res) => {
   console.log("USER SESSION: ", req.session);
 
   if (req.session.user) {
-    res.status(200).json({ user: req.session.user });
+    res.status(200).json({ 
+      user: req.session.user, 
+      userId: req.session.userId 
+    });
   } else {
     res.status(200).json({ user: null });
   }
