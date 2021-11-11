@@ -81,7 +81,7 @@ app.get("/poll/:id/results", (req, res) => {
 app.post("/poll/:id/voted", (req, res) => {
   const userId = req.session.userId || req.body.userId;
   const pollId = req.params.id;
-console.log(userId, typeof(userId))
+console.log(userId, typeof(userId), req.body)
   let userAlreadyVoted = {
     success: false,
   };
