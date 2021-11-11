@@ -124,7 +124,10 @@ app.post("/poll/:id/submit", (req, res) => {
   });
 
   const newOptionsWeight = results;
-
+  console.log('************************************')
+  console.log('newOptionsWeight:', newOptionsWeight)
+  console.log('************************************')
+  
   db.query(
     `UPDATE polls SET total_count=${submissionInfo.pollCount}, options_weight=${newOptionsWeight}  WHERE id = ${pollId};`,
     (err, result) => {
