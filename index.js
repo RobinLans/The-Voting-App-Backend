@@ -119,7 +119,7 @@ app.post("/poll/:id/submit", (req, res) => {
   submissionInfo.pollCount += 1;
 
   const newOptionsWeight = JSON.stringify(
-    submissionInfo.optionsWeight.map((option, index) => {
+    JSON.parse(submissionInfo.optionsWeight).map((option, index) => {
       if (index === choiceIndex) return option + 1;
       else return option;
     })
