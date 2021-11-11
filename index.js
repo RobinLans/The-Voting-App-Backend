@@ -116,6 +116,9 @@ app.post("/poll/:id/submit", (req, res) => {
     success: false,
   };
 
+  console.log(req.body);
+  console.log(pollId);
+
   submissionInfo.pollCount += 1;
 
   const newOptionsWeight = JSON.stringify(
@@ -126,11 +129,13 @@ app.post("/poll/:id/submit", (req, res) => {
   );
 
   db.query(
-    `UPDATE polls SET total_count=${submissionInfo.pollCount}, options_weight=${newOptionsWeight}  WHERE id = ${pollId};`,
+    `UPDATE polls SET total_count=${submissionInfo.pollCount}, options_weight='${newOptionsWeight}'  WHERE id = ${pollId};`,
     (err, result) => {
       if (err) {
         console.log(err);
       }
+
+      console.log(result);
 
       if (result?.rowCount) {
         resultOfSubmission.success = true;
@@ -219,6 +224,7 @@ app.post("/login", (req, res) => {
         loginResult.userId = data[0].id;
         loginResult.username = data[0].username;
         req.session.user = data[0].username;
+        req.session.userId = data[0].id;
         req.session.save();
         console.log("**************************************");
         console.log("USER SESSION: ", req.session);
@@ -278,7 +284,10 @@ app.get("/auth", (req, res) => {
   console.log("USER SESSION: ", req.session);
 
   if (req.session.user) {
-    res.status(200).json({ user: req.session.user });
+    res.status(200).json({
+      user: req.session.user,
+      userId: req.session.userId,
+    });
   } else {
     res.status(200).json({ user: null });
   }
