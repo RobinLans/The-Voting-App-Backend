@@ -79,7 +79,7 @@ app.get("/poll/:id/results", (req, res) => {
 
 //Check to see if the user voted
 app.get("/poll/:id/voted", (req, res) => {
-  const userId = req.session.userId;
+  const userId = 2;
   const pollId = req.params.id;
 
   let userAlreadyVoted = {
